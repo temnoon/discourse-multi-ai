@@ -1,0 +1,28 @@
+multi_ai_enabled:
+  default: false
+  client: true
+  type: bool
+
+openai_api_key:
+  default: ""
+  secret: true
+  client: false
+  type: string
+
+anthropic_api_key:
+  default: ""
+  secret: true
+  client: false
+  type: string
+
+gemini_api_key:
+  default: ""
+  secret: true
+  client: false
+  type: string
+
+groq_api_key:
+  default: ""
+  secret: true
+  client: false
+  type: string
