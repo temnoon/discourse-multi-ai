@@ -1,5 +1,6 @@
 require "net/http"
 require "json"
+require "uri"
 
 module DiscourseMultiAi
   class OpenAiProvider < BaseProvider
@@ -17,7 +18,9 @@ module DiscourseMultiAi
       }
 
       response = Net::HTTP.post(uri, body.to_json, headers)
-      JSON.parse(response.body)["choices"].first["message"]["content"]
+      json = JSON.parse(response.body)
+
+      json.dig("choices", 0, "message", "content") || json["error"]&.to_s
     end
   end
 end
