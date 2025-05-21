@@ -1,6 +1,6 @@
 # name: discourse-multi-ai
-# about: Integrate multiple external AI providers into Discourse AI (OpenAI, Anthropic, Gemini, Groq)
-# version: 0.1
+# about: Integrate multiple external AI providers into Discourse
+# version: 0.2
 # authors: Tem Noon, ChatGPT
 # required_version: 3.2.0
 # url: https://github.com/temnoon/discourse-multi-ai
@@ -9,15 +9,26 @@ enabled_site_setting :multi_ai_enabled
 
 require_relative "lib/discourse_multi_ai/engine"
 
-after_initialize do
-  require_relative "lib/discourse_multi_ai/providers/base_provider"
-  require_relative "lib/discourse_multi_ai/providers/openai_provider"
-  require_relative "lib/discourse_multi_ai/providers/anthropic_provider"
-  require_relative "lib/discourse_multi_ai/providers/gemini_provider"
-  require_relative "lib/discourse_multi_ai/providers/groq_provider"
+# Eager load all providers
+Dir[File.expand_path("../lib/discourse_multi_ai/providers/*.rb", __FILE__)].each do |file|
+  require file
+end
 
-  DiscourseAi::Completions::BaseCompletions.register_provider(:openai, DiscourseMultiAi::OpenAiProvider)
-  DiscourseAi::Completions::BaseCompletions.register_provider(:anthropic, DiscourseMultiAi::AnthropicProvider)
-  DiscourseAi::Completions::BaseCompletions.register_provider(:gemini, DiscourseMultiAi::GeminiProvider)
-  DiscourseAi::Completions::BaseCompletions.register_provider(:groq, DiscourseMultiAi::GroqProvider)
+after_initialize do
+  Rails.logger.info("[discourse-multi-ai] Plugin initialized. Providers available: OpenAI, Anthropic, Gemini, Groq.")
+
+  # Future hook point: register tools or callbacks for summarizers, bots, etc.
+  # Example: use DiscourseEvent for per-category or per-post interactions
+
+  # Example safe registration placeholder:
+  # DiscourseEvent.on(:post_created) do |post|
+  #   if post.category&.name == "AI Chat"
+  #     summary = DiscourseMultiAi::OpenAiProvider.perform_completion(
+  #       prompt: post.raw,
+  #       model: "gpt-4o",
+  #       api_key: SiteSetting.openai_api_key
+  #     )
+  #     Rails.logger.info("[discourse-multi-ai] AI Summary: #{summary}")
+  #   end
+  # end
 end
