@@ -1,5 +1,6 @@
 require "net/http"
 require "json"
+require_relative "base_provider"
 
 module DiscourseMultiAi
   class AnthropicProvider < BaseProvider

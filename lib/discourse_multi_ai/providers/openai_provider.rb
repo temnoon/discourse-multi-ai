@@ -1,6 +1,7 @@
 require "net/http"
 require "json"
 require "uri"
+require_relative "base_provider"
 
 module DiscourseMultiAi
   class OpenAiProvider < BaseProvider
